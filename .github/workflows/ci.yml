@@ -25,5 +25,8 @@ jobs:
       - name: Check Python files
         run: python -m compileall app
 
+      - name: Run automated tests
+        run: python -m pytest -v
+
       - name: Verify FastAPI application
         run: python -c "from app.main import app; print('SecurePipe application loaded successfully')"
