@@ -5,4 +5,4 @@ app = FastAPI()
 
 @app.get("/")
 def home():
-    return {"message": "SecurePipe Lite is running"}
+    return {"message": "Something went wrong"}
