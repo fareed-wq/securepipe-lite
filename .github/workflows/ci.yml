@@ -21,6 +21,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Install Semgrep
+        run: pipx install semgrep
+
+      - name: SAST scan with Semgrep
+        run: semgrep scan --config auto --error
+
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
