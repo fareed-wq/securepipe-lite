@@ -21,4 +21,5 @@ def test_health():
     assert response.json() == {
         "status": "healthy",
         "environment": "development",
+        "secret_configured": False,
     }
