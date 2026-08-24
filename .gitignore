@@ -3,3 +3,12 @@ __pycache__/
 *.pyc
 .env
 .pytest_cache/
+
+# OpenTofu / Terraform local files
+.terraform/
+*.tfstate
+*.tfstate.*
+tfplan
+*.tfplan
+crash.log
+crash.*.log
