@@ -1,0 +1,13 @@
+services:
+  app:
+    image: ghcr.io/fareed-wq/securepipe-lite:${APP_VERSION:-v1.1.0}
+
+    container_name: securepipe-deploy
+
+    env_file:
+      - .env
+
+    ports:
+      - "8000:8000"
+
+    restart: unless-stopped
