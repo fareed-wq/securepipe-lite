@@ -1,5 +1,9 @@
 name: SecurePipe CI
 
+permissions:
+  contents: read
+  packages: write
+
 on:
   push:
     branches: [main]
@@ -53,9 +57,6 @@ jobs:
       - name: Build Docker image
         run: docker build -t securepipe-lite:ci .
 
-      - name: Verify container setuptools version
-        run: docker run --rm securepipe-lite:ci python -c "import setuptools; print(setuptools.__version__)"
-
       - name: Scan Docker image with Trivy
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
@@ -68,3 +69,17 @@ jobs:
           scanners: 'vuln'
           skip-files: '**/pip/_vendor/bom.cdx.json'
           version: 'v0.74.0'
+
+      - name: Login to GitHub Container Registry
+        if: github.event_name == 'push'
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin      
+
+      - name: Push Docker image to GHCR
+        if: github.event_name == 'push'
+        run: |
+          docker tag securepipe-lite:ci ghcr.io/${{ github.repository_owner }}/securepipe-lite:latest
+          docker tag securepipe-lite:ci ghcr.io/${{ github.repository_owner }}/securepipe-lite:${{ github.sha }}
+
+          docker push ghcr.io/${{ github.repository_owner }}/securepipe-lite:latest
+          docker push ghcr.io/${{ github.repository_owner }}/securepipe-lite:${{ github.sha }}
+
