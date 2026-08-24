@@ -2,6 +2,11 @@ FROM python:3.13-slim
 
 WORKDIR /app
 
+# Apply available Debian security updates
+RUN apt-get update \
+    && apt-get upgrade -y \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY requirements.txt .
 
 RUN python -m pip install --no-cache-dir --upgrade "setuptools>=78.1.1" \
