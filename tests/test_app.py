@@ -13,3 +13,8 @@ def test_home():
     assert response.json() == {
         "message": "SecurePipe Lite is running"
     }
+
+def test_health():
+    response = client.get("/health")
+    assert response.status_code == 200
+    assert response.json() == {"status": "healthy"}
