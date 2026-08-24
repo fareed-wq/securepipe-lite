@@ -4,7 +4,8 @@ WORKDIR /app
 
 COPY requirements.txt .
 
-RUN pip install --no-cache-dir -r requirements.txt \
+RUN python -m pip install --no-cache-dir --upgrade "setuptools>=78.1.1" \
+    && pip install --no-cache-dir -r requirements.txt \
     && groupadd --system appgroup \
     && useradd --system --gid appgroup --create-home appuser
 
