@@ -37,7 +37,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
-          python-version: "3.13"
+          python-version: '3.13'
 
       - name: Install pip-audit
         run: python -m pip install pip-audit==2.10.1
@@ -46,7 +46,7 @@ jobs:
         run: pip-audit --no-deps -r requirements.txt
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: python -m pip install -r requirements.txt
 
       - name: Check Python files
         run: python -m compileall app
@@ -55,10 +55,25 @@ jobs:
         run: python -m pytest -v
 
       - name: Verify FastAPI application
-        run: python -c "from app.main import app; print('SecurePipe application loaded successfully')"
+        run: python -c "from app.main import app; assert app is not None"
 
       - name: Build Docker image
         run: docker build -t securepipe-lite:ci .
+
+      - name: Verify GitHub secret injection
+        if: github.event_name == 'push'
+        env:
+          APP_SECRET: ${{ secrets.APP_SECRET }}
+        run: |
+          if [ -z "$APP_SECRET" ]; then
+            echo "APP_SECRET is not configured"
+            exit 1
+          fi
+
+          docker run --rm \
+            -e APP_SECRET \
+            securepipe-lite:ci \
+            python -c "import os; assert os.environ.get('APP_SECRET'); print('APP_SECRET injected successfully')"
 
       - name: Scan Docker image with Trivy
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
@@ -76,6 +91,7 @@ jobs:
       - name: Login to GitHub Container Registry
         if: github.event_name == 'push'
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+
       - name: Push Docker image to GHCR
         if: github.event_name == 'push'
         run: |
@@ -94,4 +110,3 @@ jobs:
             docker tag securepipe-lite:ci "$IMAGE:$VERSION"
             docker push "$IMAGE:$VERSION"
           fi
-
