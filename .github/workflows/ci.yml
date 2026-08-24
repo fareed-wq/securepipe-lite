@@ -53,6 +53,9 @@ jobs:
       - name: Build Docker image
         run: docker build -t securepipe-lite:ci .
 
+      - name: Verify container setuptools version
+        run: docker run --rm securepipe-lite:ci python -c "import setuptools; print(setuptools.__version__)"
+
       - name: Scan Docker image with Trivy
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
