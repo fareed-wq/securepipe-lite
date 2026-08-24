@@ -12,31 +12,31 @@ The project was intentionally designed to remain lightweight and runnable on mod
 
 ```mermaid
 flowchart TD
-    A[Developer] -->|Git Push / Pull Request| B[GitHub]
+    A["Developer"] -->|"Git Push / Pull Request"| B["GitHub"]
 
-    B --> C[GitHub Actions CI]
+    B --> C["GitHub Actions CI"]
 
-    C --> D[Gitleaks<br/>Secret Scanning]
-    D --> E[Semgrep<br/>SAST]
-    E --> F[pip-audit<br/>Dependency Scanning]
-    F --> G[Python Validation]
-    G --> H[Automated Tests]
-    H --> I[Docker Build]
-    I --> J[Trivy<br/>Container Scan]
+    C --> D["Gitleaks - Secret Scanning"]
+    D --> E["Semgrep - SAST"]
+    E --> F["pip-audit - Dependency Scanning"]
+    F --> G["Python Validation"]
+    G --> H["Automated Tests"]
+    H --> I["Docker Build"]
+    I --> J["Trivy - Container Scan"]
 
-    J -->|Pass| K[GitHub Container Registry]
+    J -->|"Pass"| K["GitHub Container Registry"]
 
-    K --> L[Versioned Docker Image]
+    K --> L["Versioned Docker Image"]
 
-    L --> M[Docker Compose Deployment]
-    L --> N[OpenTofu IaC Deployment]
+    L --> M["Docker Compose Deployment"]
+    L --> N["OpenTofu IaC Deployment"]
 
-    M --> O[FastAPI Application]
+    M --> O["FastAPI Application"]
     N --> O
 
-    O --> P[/health]
-    O --> Q[/metrics]
-    O --> R[Structured JSON Logs]
+    O --> P["/health"]
+    O --> Q["/metrics"]
+    O --> R["Structured JSON Logs"]
 ```
 
 ---
