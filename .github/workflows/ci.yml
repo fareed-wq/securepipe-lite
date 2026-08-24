@@ -49,3 +49,6 @@ jobs:
 
       - name: Verify FastAPI application
         run: python -c "from app.main import app; print('SecurePipe application loaded successfully')"
+
+      - name: Build Docker image
+        run: docker build -t securepipe-lite:ci .
